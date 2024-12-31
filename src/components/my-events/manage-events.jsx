@@ -53,7 +53,7 @@ export default function Manage() {
         };
 
         fetchEvents();
-    }, []);
+    }, [events.map(event => event.approveStatus).join(',')]);
 
     const handleEventStatus = (status) => {
         setActiveState(status);
