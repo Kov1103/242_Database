@@ -63,7 +63,6 @@ const ordersController = new OrdersController(client);
  */
 const createOrder = async (totalAmount) => {
   totalAmount = fx(totalAmount).from("VND").to("USD").toFixed(2);
-  console.log("Converted amount:", totalAmount);
   const collect = {
     body: {
       intent: CheckoutPaymentIntent.Capture,
