@@ -12,7 +12,7 @@ const PayPalButton = ({total, onSuccess}) => {
     // Check if PayPal SDK is loaded
     // if (!window.paypal) {
       const script = document.createElement("script");
-      script.src = "https://www.sandbox.paypal.com/sdk/js?client-id=AT610ovnk_ToT_UARmLIr503I-Mj_co4Bt4-3GEYNacvBQsx3TbPhr6RorP0C_sNyIUMPLLxlZ_BSc-l"; // Replace with your PayPal client ID
+      script.src = `https://www.sandbox.paypal.com/sdk/js?client-id=AcdkeMIK6Ga_pMzN_Qh08uK-CElr0edzJOqP7eWmE2SKMnTdikt9bS2qSGFJpmoKUg9pOtF_ljYfB9_g`; // Replace with your PayPal client ID
       script.async = true;
       script.onload = () => {
         // Initialize PayPal Buttons after the script is loaded
