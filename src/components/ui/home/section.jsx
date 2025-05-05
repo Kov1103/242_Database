@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import EventCard from './event-card';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
+import { fetchAllEvents } from '../../../controllers/eventController';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -30,25 +31,44 @@ export default function Section({ title, categoryItems, maxCards }) {
     const navigate = useNavigate()
 
     const [activeCategory, setActiveCategory] = useState('Tất cả');
+    const [filters, setFilters] = useState({
+        keyword: '',
+        category_id: '',
+        min_price: '',
+        max_price: '',
+        start_time: '',
+        end_time: '',
+    });
     const [events, setEvents] = useState([]);
 
     // fetch events from database with category filtering
+    // useEffect(() => {
+    //     const fetchEvents = async () => {
+    //         const categoryFilter = activeCategory === 'Tất cả' ? {} : { category: activeCategory };
+    //         const { data, error } = await supabase
+    //             .from('events')
+    //             .select('*')
+    //             .match({ ...categoryFilter, approveStatus: 'approved' });
+    //         if (error) {
+    //             console.error('Error fetching events:', error.message);
+    //         } else {
+    //             setEvents(data);
+    //         }
+    //     };
+    //     fetchEvents();
+    // }, [activeCategory]);
     useEffect(() => {
         const fetchEvents = async () => {
-            const categoryFilter = activeCategory === 'Tất cả' ? {} : { category: activeCategory };
-            const { data, error } = await supabase
-                .from('events')
-                .select('*')
-                .match({ ...categoryFilter, approveStatus: 'approved' });
-
-            if (error) {
-                console.error('Error fetching events:', error.message);
-            } else {
-                setEvents(data);
-            }
+          try {
+            const data = await fetchAllEvents(filters); // Truyền filters
+            console.log(data);
+            setEvents(data);
+          } catch (err) {
+            console.error("Lỗi lấy sự kiện:", err.message);
+          }
         };
         fetchEvents();
-    }, [activeCategory]);
+      }, [filters]);
 
     useEffect(() => {
         if (categoryItems.length > 0) {
@@ -56,23 +76,85 @@ export default function Section({ title, categoryItems, maxCards }) {
         }
     }, [categoryItems]);
 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prev) => ({ ...prev, [name]: value }));
+      };
+
     const eventsToDisplay = events.slice(0, maxCards);
     const chunkedEvents = chunkArray(eventsToDisplay, 3);
 
     return (
         <div className='max-w-screen'>
-            <div className="flex flex-col items-center gap-12 px-[120px] py-16 relative mx-auto w-full lg:min-w-[1440px] lg:max-w-[1440px] md:min-w-[1028px] md:max-w-[1028px]">
+            <div className="flex flex-col items-center gap-12 py-16 relative mx-auto w-full max-w-7xl px-4 lg:px-8">
                 <div className="flex flex-col items-start gap-2 w-full">
                     <p className="text-5xl leading-[64px] text-[#1b1b1b] font-extrabold">{title}</p>
-                    <div className="flex flex-row items-center gap-2">
-                        {categoryItems.map((category, index) => (
+                    <div className="flex flex-row items-center gap-2 text-gray-600">
+                        {/* {categoryItems.map((category, index) => (
                             <CategoryButton
                                 key={index}
                                 category={category}
                                 isActive={category === activeCategory}
                                 onClick={() => setActiveCategory(category)}
                             />
-                        ))}
+                        ))} */}
+                        <div className="flex flex-wrap gap-4 mb-6">
+                            <input
+                                type="text"
+                                name="keyword"
+                                value={filters.keyword}
+                                placeholder="Tìm kiếm"
+                                onChange={handleFilterChange}
+                                className="border px-2 py-1 w-full sm:w-[180px]"
+                            />
+                            <select
+                                name="category_id"
+                                value={filters.category_id}
+                                onChange={handleFilterChange}
+                                className="border px-2 py-1 w-full sm:w-[180px]"
+                            >
+                                <option value="">Tất cả danh mục</option>
+                                <option value="Khoa học">Khoa học</option>
+                                <option value="Nghiên cứu">Nghiên cứu</option>
+                                <option value="Thể thao">Thể thao</option>
+                                <option value="Âm nhạc">Âm nhạc</option>
+                                <option value="Hướng nghiệp">Hướng nghiệp</option>
+                                <option value="Tình nguyện">Tình nguyện</option>
+                                <option value="Tuyển dụng">Tuyển dụng</option>
+                                <option value="Học thuật">Học thuật</option>
+                                <option value="Xã hội">Xã hội</option>
+                            </select>
+                            <input
+                                type="number"
+                                name="min_price"
+                                value={filters.min_price}
+                                placeholder="Giá tối thiểu"
+                                onChange={handleFilterChange}
+                                className="border px-2 py-1 w-full sm:w-[180px]"
+                            />
+                            <input
+                                type="number"
+                                name="max_price"
+                                value={filters.max_price}
+                                placeholder="Giá tối đa"
+                                onChange={handleFilterChange}
+                                className="border px-2 py-1 w-full sm:w-[180px]"
+                            />
+                            <input
+                            type="date"
+                            name="start_time"
+                            value={filters.start_time}
+                            onChange={handleFilterChange}
+                            className="border px-2 py-1 w-full sm:w-[180px]"
+                            />
+                            <input
+                            type="date"
+                            name="end_time"
+                            value={filters.end_time}
+                            onChange={handleFilterChange}
+                            className="border px-2 py-1 w-full sm:w-[180px]"
+                            />
+                        </div>
                     </div>
                 </div>
                 {chunkedEvents.length === 0 && (

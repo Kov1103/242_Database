@@ -13,7 +13,7 @@ export default function Home() {
                 <div className='h-full w-full'>
                     <main className="flex-grow items-center justify-center flex flex-col w-full overflow-x-hidden">
                         <Carousel />
-                        <Section title='SỰ KIỆN NỔI BẬT' categoryItems={RECENT_CATEGORY} maxCards={3} />
+                        {/* <Section title='SỰ KIỆN NỔI BẬT' categoryItems={RECENT_CATEGORY} maxCards={3} /> */}
                         <Section title='SỰ KIỆN' categoryItems={EVENT_CATEGORY} />
                     </main>
                     <Footer />

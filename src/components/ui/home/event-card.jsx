@@ -25,8 +25,8 @@ export default function EventCard({ event, onClick }) {
         return recentDate.toLocaleDateString(undefined, options);
     };
 
-    const smallestPrice = getSmallestPrice(event.shows);
-    const recentDate = getRecentDate(event.shows);
+    // const smallestPrice = getSmallestPrice(event.shows);
+    // const recentDate = getRecentDate(event.shows);
 
     return (
         <div className="flex relative rounded-3xl min-w-[380px] max-w-[405px] min-h-[480px] border border-black bg-[#fafafa]">
@@ -39,11 +39,21 @@ export default function EventCard({ event, onClick }) {
                     <div className="flex flex-col items-start gap-1 text-base font-normal">
                         <div className="flex flex-row items-center gap-3">
                             <img src="/assets/icons/ticket.svg" alt="ticket" />
-                            <p>{smallestPrice.toLocaleString()} VND</p>
+                            {/* <p>{smallestPrice.toLocaleString()} VND</p> */}
+                            <p>{event.min_price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} - {event.max_price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
                         </div>
                         <div className="flex flex-row items-center gap-3">
                             <img src="/assets/icons/calendar.svg" alt="calendar" />
-                            <p>{recentDate}</p>
+                            {/* <p>{recentDate}</p> */}
+                            {new Date(event.first_session_time).toLocaleDateString('vi-VN', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })} - {new Date(event.last_session_time).toLocaleDateString('vi-VN', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
                         </div>
                     </div>
                 </div>
