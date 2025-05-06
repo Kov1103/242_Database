@@ -33,4 +33,27 @@ router.get('/', (req, res) => {
     });
 });
 
+router.get('/:id', (req, res) => {
+    const bookingId = parseInt(req.params.id, 10);
+
+    if (isNaN(bookingId)) {
+        return res.status(400).json({ message: 'ID không hợp lệ' });
+    }
+
+    db.query('CALL get_booking_detail(?)', [bookingId], (err, results) => {
+        if (err) {
+            console.error('Lỗi truy vấn booking detail:', err.message);
+            return res.status(500).json({ message: 'Lỗi server khi lấy booking' });
+        }
+
+        const data = results; // Kết quả trả về là mảng lồng
+
+        if (!data) {
+            return res.status(404).json({ message: 'Không tìm thấy đơn hàng' });
+        }
+
+        res.json({ message: 'Lấy đơn hàng thành công', booking: data });
+    });
+});
+
 export default router;
