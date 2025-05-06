@@ -142,6 +142,7 @@ import cors from "cors";
 import { db } from './db.js';
 
 import eventRoutes from "./routes/Event.js"
+import authRoutes from "./routes/Auth.js"
 
 const app = express();
 const port = 3000;
@@ -150,6 +151,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/events', eventRoutes);
+app.use('/auth', authRoutes);
 
 // // GET all events
 // app.get("/api/events", (req, res) => {
