@@ -1,6 +1,7 @@
 import AdminSidebar from "../ui/admin/sidebar"
 import { useEffect, useState } from "react"
 import { createClient } from '@supabase/supabase-js';
+import { changeInfo, fetchAllUsers } from "../../controllers/userController";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -22,16 +23,57 @@ export default function ManageUsers() {
     const [users, setUsers] = useState([]);
     const [fileredUsers, setFilteredUsers] = useState([]);
 
+    const [editingUser, setEditingUser] = useState(null);
+const [formData, setFormData] = useState({ email: '', phone_no: '', address: '' });
+const openEditModal = (user) => {
+    setEditingUser(user);
+    setFormData({
+      email: user.email || '',
+      phone_no: user.phone_no || '',
+      address: user.address || ''
+    });
+  };
+
+  const handleSave = async () => {
+    try {
+      await changeInfo(editingUser, formData.phone_no, formData.address, formData.email);
+      const updated = users.map(u =>
+        u.id === editingUser.id
+          ? { ...u, email: formData.email, phone_no: formData.phone_no, address: formData.address }
+          : u
+      );
+      setUsers(updated);
+      handleUserStatus(activeRole);
+      setEditingUser(null);
+    } catch (err) {
+      console.error("Lỗi cập nhật:", err.message);
+    }
+  };
+
+    // useEffect(() => {
+    //     const fetchUsers = async () => {
+    //         const { data, error } = await supabase.from('users').select('*');
+    //         if (error) {
+    //             console.log('error', error);
+    //             return;
+    //         }
+    //         console.log(data);
+    //         setUsers(data);
+    //         setFilteredUsers(data);
+    //     };
+    //     fetchUsers();
+    // }, [users.map(user => user.role).join(',')])
+
     useEffect(() => {
         const fetchUsers = async () => {
-            const { data, error } = await supabase.from('users').select('*');
-            if (error) {
-                console.log('error', error);
-                return;
+            try {
+                const data = await fetchAllUsers(); // Truyền filters
+                console.log(data);
+                setUsers(data);
+                setFilteredUsers(data);
+            } catch (err) {
+                console.error("Lỗi lấy người dùng:", err.message);
             }
-            console.log(data);
-            setUsers(data);
-            setFilteredUsers(data);
         };
         fetchUsers();
     }, [users.map(user => user.role).join(',')])
@@ -100,19 +142,20 @@ export default function ManageUsers() {
         return (
             <div className="w-full flex flex-row items-start justify-between py-5 px-6 rounded-xl border border-black hover:cursor-pointer hover:bg-[#d9d9d9]">
             <div className="flex flex-col items-start gap-1">
-                <p className="font-bold text-lg">{user.name}</p>
+                <p className="font-bold text-lg">{user.lname} {user.fname}</p>
                 <p className="font-normal text-base">Email: {user.email}</p>
                 <p className="font-normal text-base">Lần cuối hoạt động: </p>
             </div>
             <div className="flex flex-col items-end gap-4">
                 <UserBadge role={user.role} />
                 <div className="flex flex-row items-center gap-2">
-                {user.role !== 'admin' && (
+                {/* {user.role !== 'admin' && (
                     <button className="text-white bg-[#219ce4] px-4 py-2 rounded-lg" onClick={() => handleRoleChange(user.id, "admin")}>Cấp quyền</button>
                 )}
                 {user.role === 'admin' && (
                     <button className="text-white bg-[#f24b4b] px-4 py-2 rounded-lg" onClick={() => handleRoleChange(user.id, "customer")}>Hủy quyền</button>
-                )}
+                )} */}
+                <button className="text-white bg-[#f2ae39] px-4 py-2 rounded-lg" onClick={() => openEditModal(user)}>Chỉnh sửa</button>
                 <button className="text-white bg-[#1b1b1b] px-4 py-2 rounded-lg" onClick={() => handleRemoveUser(user.id)}>Xóa</button>
                 </div>
             </div>
@@ -122,10 +165,47 @@ export default function ManageUsers() {
 
     return (
         <div className="flex-1 min-h-0 max-h-[calc(100vh-76px)] bg-[#fafafa] w-full flex flex-row gap-5 items-start overflow-hidden">
+            {editingUser && (
+            <div className="fixed text-black inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg">
+                <h2 className="text-xl font-bold mb-4">Chỉnh sửa người dùng</h2>
+                <div className="flex flex-col gap-4">
+                    <label>Email:</label>
+                    <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="border border-gray-300 rounded px-3 py-2"
+                    placeholder="Email"
+                    />
+                    <label>Số điện thoại:</label>
+                    <input
+                    type="text"
+                    value={formData.phone_no}
+                    onChange={(e) => setFormData({ ...formData, phone_no: e.target.value })}
+                    className="border border-gray-300 rounded px-3 py-2"
+                    placeholder="Số điện thoại"
+                    />
+                    <label>Địa chỉ:</label>
+                    <input
+                    type="text"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="border border-gray-300 rounded px-3 py-2"
+                    placeholder="Địa chỉ"
+                    />
+                    <div className="flex justify-end gap-2">
+                    <button className="px-4 py-2 rounded bg-gray-300" onClick={() => setEditingUser(null)}>Hủy</button>
+                    <button className="px-4 py-2 rounded bg-[#219ce4] text-white" onClick={handleSave}>Lưu</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            )}
             <AdminSidebar />
             <div className="flex flex-col items-start gap-3 w-full py-7 px-5 text-[#1b1b1b] overflow-hidden">
                 <p className="text-2xl font-extrabold">Tất cả người dùng</p>
-                <div className="flex flex-row items-center gap-2">
+                {/* <div className="flex flex-row items-center gap-2">
                     {['Tất cả', 'Quản trị viên', 'Khách hàng'].map((role, index) => (
                         <RoleButton
                             key={index}
@@ -134,7 +214,7 @@ export default function ManageUsers() {
                             onClick={() => handleUserStatus(role)}
                         />
                     ))}
-                </div>
+                </div> */}
                 <div className="my-2 flex flex-col items-start gap-2 w-full h-[calc(100vh-240px)] overflow-y-auto scrollbar-hide">
                     {fileredUsers?.map((user, index) => (
                         <UserItem key={index} user={user} />

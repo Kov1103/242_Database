@@ -36,6 +36,17 @@ export const putData = async (endpoint, data) => {
   }
 };
 
+// Hàm gọi API PATCH
+export const patchData = async (endpoint, data) => {
+  try {
+    const response = await axios.patch(`${API_URL}${endpoint}`, data);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Lỗi khi gọi PATCH API tại ${endpoint}:`, error.message);
+    throw error;
+  }
+};
+
 // Hàm gọi API DELETE
 export const deleteData = async (endpoint) => {
   try {

@@ -190,7 +190,7 @@ export default function Section({ title, categoryItems, maxCards }) {
                         </div>
                     </div>
                 </div>
-                <div className="my-2 flex flex-col items-start gap-2 w-full h-[calc(100vh-240px)] overflow-y-auto scrollbar-hide">
+                <div className="my-2 flex flex-col items-start gap-2 w-full h-[calc(100vh-400px)] overflow-y-auto scrollbar-hide">
 
                     {chunkedEvents.length === 0 && (
                         <p className="text-black w-full text-left">Không có sự kiện nào.</p>

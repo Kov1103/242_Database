@@ -2,8 +2,13 @@
 import { getAllUsers, createUser, getUser, getSession, updateUser } from "../models/User";
 
 export const fetchAllUsers = async () => {
-  return await getAllUsers();
+  const data = await getAllUsers();
+  return data.users;
 };
+
+export const changeInfo = async (user, phone_no, address, email) => {
+    return await updateUser(user, phone_no, address, email);
+  };
 
 export const addUser = async (user) => {
   return await createUser(user);
@@ -38,6 +43,6 @@ export const fetchUser = async () => {
   }
 }
 
-export const changeInfo = async (user) => {
-  return await updateUser(user)
-}
+// export const changeInfo = async (user) => {
+//   return await updateUser(user)
+// }

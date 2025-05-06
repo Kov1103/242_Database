@@ -143,6 +143,7 @@ import { db } from './db.js';
 
 import eventRoutes from "./routes/Event.js"
 import authRoutes from "./routes/Auth.js"
+import userRoutes from "./routes/User.js"
 
 const app = express();
 const port = 3000;
@@ -152,6 +153,7 @@ app.use(express.json());
 
 app.use('/events', eventRoutes);
 app.use('/auth', authRoutes);
+app.use('/users', userRoutes)
 
 // // GET all events
 // app.get("/api/events", (req, res) => {
