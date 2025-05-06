@@ -40,6 +40,14 @@ export const getSession = () => {
 //   return data
 // }
 export const updateUser = async (user, phone_no, address, email) => {
+  console.log(user)
+  const formatDob = (dobString) => {
+    const date = new Date(dobString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // tháng từ 0-11
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day} 00:00:00`;
+  };
   const response = await patchData('/users/update', {
     id: user.id,
     ssn: user.ssn,
@@ -48,9 +56,10 @@ export const updateUser = async (user, phone_no, address, email) => {
     fname: user.fname,
     lname: user.lname,
     gender: user.gender,
-    dob: user.dob,
+    dob: formatDob(user.dob),
     phone_no: phone_no,
     address: address,
   }); // Gọi API lấy tất cả sự kiện
+  
   return response
 };

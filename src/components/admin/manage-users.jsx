@@ -50,7 +50,51 @@ const openEditModal = (user) => {
     }
   };
 
-    // useEffect(() => {
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newUserData, setNewUserData] = useState({
+    ssn: '',
+    email: '',
+    password: '',
+    fname: '',
+    lname: '',
+    gender: 'M',
+    dob: '',
+    phone_no: '',
+    address: '',
+  });
+
+  const handleAddUser = async () => {
+    try {
+    //   const { ssn, email, password, fname, lname, gender, dob, phone_no, address } = newUserData;
+  
+    //   const { data, error } = await supabase.rpc('add_user', {
+    //     in_ssn: ssn,
+    //     in_email: email,
+    //     in_password: password,
+    //     in_fname: fname,
+    //     in_lname: lname,
+    //     in_gender: gender,
+    //     in_dob: dob,
+    //     in_phone_no: phone_no,
+    //     in_address: address
+    //   });
+  
+    //   if (error) throw error;
+  
+    //   // Optionally re-fetch or add to list manually
+    //   const updated = await fetchAllUsers();
+    //   setUsers(updated);
+    //   handleUserStatus(activeRole);
+    //   setShowAddModal(false);
+    //   setNewUserData({
+    //     ssn: '', email: '', password: '', fname: '', lname: '',
+    //     gender: 'M', dob: '', phone_no: '', address: ''
+    //   });
+    } catch (err) {
+      console.error("Lỗi thêm người dùng:", err.message);
+    }
+  };
+// useEffect(() => {
     //     const fetchUsers = async () => {
     //         const { data, error } = await supabase.from('users').select('*');
     //         if (error) {
@@ -202,9 +246,79 @@ const openEditModal = (user) => {
                 </div>
             </div>
             )}
+            {showAddModal && (
+            <div className="fixed text-black inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg overflow-y-auto max-h-[90vh]">
+                <h2 className="text-xl font-bold mb-4">Thêm người dùng</h2>
+                <div className="flex flex-col gap-3">
+                    {[
+                    { label: "SSN", key: "ssn" },
+                    { label: "Email", key: "email" },
+                    { label: "Mật khẩu", key: "password", type: "password" },
+                    { label: "Họ", key: "lname" },
+                    { label: "Tên", key: "fname" },
+                    { label: "Giới tính", key: "gender", type: "select" },
+                    { label: "Ngày sinh", key: "dob", type: "date" },
+                    { label: "Số điện thoại", key: "phone_no" },
+                    { label: "Địa chỉ", key: "address" }
+                    ].map(({ label, key, type = "text" }) => (
+                    <div key={key}>
+                        <label className="block font-medium">{label}:</label>
+                        {type === "select" ? (
+                        <select
+                            value={newUserData[key]}
+                            onChange={(e) =>
+                            setNewUserData({ ...newUserData, [key]: e.target.value })
+                            }
+                            className="border border-gray-300 rounded px-3 py-2 w-full"
+                        >
+                            <option value="M">Nam</option>
+                            <option value="F">Nữ</option>
+                        </select>
+                        ) : (
+                        <input
+                            type={type}
+                            value={newUserData[key]}
+                            onChange={(e) =>
+                            setNewUserData({ ...newUserData, [key]: e.target.value })
+                            }
+                            className="border border-gray-300 rounded px-3 py-2 w-full"
+                        />
+                        )}
+                    </div>
+                    ))}
+
+                    <div className="flex justify-end gap-2 mt-4">
+                    <button
+                        className="px-4 py-2 rounded bg-gray-300"
+                        onClick={() => setShowAddModal(false)}
+                    >
+                        Hủy
+                    </button>
+                    <button
+                        className="px-4 py-2 rounded bg-[#219ce4] text-white"
+                        onClick={handleAddUser}
+                    >
+                        Lưu
+                    </button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            )}
+
             <AdminSidebar />
             <div className="flex flex-col items-start gap-3 w-full py-7 px-5 text-[#1b1b1b] overflow-hidden">
+                {/* <p className="text-2xl font-extrabold">Tất cả người dùng</p> */}
+                <div className="w-full flex flex-row justify-between items-center">
                 <p className="text-2xl font-extrabold">Tất cả người dùng</p>
+                <button
+                    className="bg-[#219ce4] text-white px-4 py-2 rounded-lg"
+                    onClick={() => setShowAddModal(true)}
+                >
+                    Thêm người dùng
+                </button>
+                </div>
                 {/* <div className="flex flex-row items-center gap-2">
                     {['Tất cả', 'Quản trị viên', 'Khách hàng'].map((role, index) => (
                         <RoleButton
