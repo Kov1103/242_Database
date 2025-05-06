@@ -28,7 +28,7 @@ function chunkArray(array, chunkSize) {
 }
 
 export default function Section({ title, categoryItems, maxCards }) {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const [activeCategory, setActiveCategory] = useState('Tất cả');
     const [filters, setFilters] = useState({
@@ -59,16 +59,16 @@ export default function Section({ title, categoryItems, maxCards }) {
     // }, [activeCategory]);
     useEffect(() => {
         const fetchEvents = async () => {
-          try {
-            const data = await fetchAllEvents(filters); // Truyền filters
-            console.log(data);
-            setEvents(data);
-          } catch (err) {
-            console.error("Lỗi lấy sự kiện:", err.message);
-          }
+            try {
+                const data = await fetchAllEvents(filters); // Truyền filters
+                console.log(data);
+                setEvents(data);
+            } catch (err) {
+                console.error("Lỗi lấy sự kiện:", err.message);
+            }
         };
         fetchEvents();
-      }, [filters]);
+    }, [filters]);
 
     useEffect(() => {
         if (categoryItems.length > 0) {
@@ -79,7 +79,7 @@ export default function Section({ title, categoryItems, maxCards }) {
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilters((prev) => ({ ...prev, [name]: value }));
-      };
+    };
 
     const eventsToDisplay = events.slice(0, maxCards);
     const chunkedEvents = chunkArray(eventsToDisplay, 3);
@@ -87,7 +87,7 @@ export default function Section({ title, categoryItems, maxCards }) {
     return (
         <div className='max-w-screen'>
             <div className="flex flex-col items-center gap-12 py-16 relative mx-auto w-full max-w-7xl px-4 lg:px-8">
-                <div className="flex flex-col items-start gap-2 w-full">
+                <div className="flex flex-col items-start gap-2 w-full overflow-hidden">
                     <p className="text-5xl leading-[64px] text-[#1b1b1b] font-extrabold">{title}</p>
                     <div className="flex flex-row items-center gap-2 text-gray-600">
                         {/* {categoryItems.map((category, index) => (
@@ -141,39 +141,42 @@ export default function Section({ title, categoryItems, maxCards }) {
                                 className="border px-2 py-1 w-full sm:w-[180px]"
                             />
                             <input
-                            type="date"
-                            name="start_time"
-                            value={filters.start_time}
-                            onChange={handleFilterChange}
-                            className="border px-2 py-1 w-full sm:w-[180px]"
+                                type="date"
+                                name="start_time"
+                                value={filters.start_time}
+                                onChange={handleFilterChange}
+                                className="border px-2 py-1 w-full sm:w-[180px]"
                             />
                             <input
-                            type="date"
-                            name="end_time"
-                            value={filters.end_time}
-                            onChange={handleFilterChange}
-                            className="border px-2 py-1 w-full sm:w-[180px]"
+                                type="date"
+                                name="end_time"
+                                value={filters.end_time}
+                                onChange={handleFilterChange}
+                                className="border px-2 py-1 w-full sm:w-[180px]"
                             />
                         </div>
                     </div>
                 </div>
-                {chunkedEvents.length === 0 && (
-                    <p className="text-black w-full text-left">Không có sự kiện nào.</p>
-                )}
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {chunkedEvents.map((row, rowIndex) =>
-                        row.map((item) => (
-                            <div key={item.id} className="w-full">
-                                <EventCard
-                                    event={item}
-                                    onClick={() => {
-                                        window.scrollTo(0, 0);
-                                        navigate(`/ticket-details/${item.id}`);
-                                    }}
-                                />
-                            </div>
-                        ))
+                <div className="my-2 flex flex-col items-start gap-2 w-full h-[calc(100vh-240px)] overflow-y-auto scrollbar-hide">
+
+                    {chunkedEvents.length === 0 && (
+                        <p className="text-black w-full text-left">Không có sự kiện nào.</p>
                     )}
+                    <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                        {chunkedEvents.map((row, rowIndex) =>
+                            row.map((item) => (
+                                <div key={item.id} className="w-full">
+                                    <EventCard
+                                        event={item}
+                                        onClick={() => {
+                                            window.scrollTo(0, 0);
+                                            navigate(`/ticket-details/${item.id}`);
+                                        }}
+                                    />
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

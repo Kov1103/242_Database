@@ -1,5 +1,5 @@
-import AdminSidebar from "../ui/admin/sidebar"
-import { useEffect, useState } from "react"
+import AdminSidebar from "../ui/admin/sidebar";
+import { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js';
 import Section from "../ui/home/section";
 
@@ -154,20 +154,20 @@ export default function ManageEvents() {
     const EVENT_CATEGORY = ['Tất cả', 'Âm nhạc', 'Thể thao', 'Seminar', 'Khác'];
     return (
         <div className="flex-1 min-h-0 max-h-[calc(100vh-76px)] bg-[#fafafa] w-full flex flex-row gap-5 items-start overflow-hidden">
-        <AdminSidebar />
-        <div className="relative min-h-[100dvh] bg-[#fafafa]">
-            {/* <Header /> */}
-            <div className='relative z-0'>
-                <div className='h-full w-full'>
-                    <main className="flex-grow items-center justify-center flex flex-col w-full overflow-x-hidden">
-                        {/* <Carousel /> */}
-                        {/* <Section title='SỰ KIỆN NỔI BẬT' categoryItems={RECENT_CATEGORY} maxCards={3} /> */}
-                        <Section title='SỰ KIỆN' categoryItems={EVENT_CATEGORY} />
-                    </main>
-                    {/* <Footer /> */}
+            <AdminSidebar />
+            <div className="relative min-h-[100dvh] bg-[#fafafa]">
+                {/* <Header /> */}
+                <div className='relative z-0'>
+                    <div className='h-full w-full'>
+                        <main className="flex-grow items-center justify-center flex flex-col w-full  overflow-x-hidden overflow-y-auto">
+                            {/* <Carousel /> */}
+                            {/* <Section title='SỰ KIỆN NỔI BẬT' categoryItems={RECENT_CATEGORY} maxCards={3} /> */}
+                            <Section title='SỰ KIỆN' categoryItems={EVENT_CATEGORY} />
+                        </main>
+                        {/* <Footer /> */}
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }
