@@ -38,7 +38,7 @@ export default function BookingDetailModal({ idBooking, onClose }) {
     const answers = data[3] || [];
 
     return (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
+        <div className="fixed text-black inset-0 z-50 bg-black bg-opacity-40 flex items-center justify-center">
             <div className="bg-white rounded-xl shadow-xl p-6 max-w-3xl w-full overflow-auto max-h-[90vh]">
                 <h2 className="text-2xl font-semibold mb-4">Chi tiết đơn hàng #{bookingInfo?.booking_id}</h2>
 
