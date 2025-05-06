@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -17,36 +17,42 @@ const SIDEBAR_ITEMS = [
         title: 'Quản lý người dùng',
         link: '/admin/manage-users',
         icon: 'profile-2user'
+    },
+    {
+        id: 3,
+        title: 'Quản lý đơn hàng',
+        link: '/admin/manage-booking',
+        icon: 'ticket'
     }
-]
+];
 
 function SidebarItem({ title, link, icon, isActive, onClick }) {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const handleOnClick = () => {
         if (onClick) {
-            onClick()
+            onClick();
         }
-        if(link)
-        navigate(`${link}`)
-    }
+        if (link)
+            navigate(`${link}`);
+    };
     return (
-        <div 
+        <div
             className={`flex flex-row items-center gap-2 text-[#1b1b1b] hover:cursor-pointer hover:bg-[#ddeffa] hover:gap-4 px-4 py-4 rounded-r-2xl w-full ${isActive ? 'text-[#219ce4] bg-[#ddeffa] rounded-r-2xl border-l-4 border-[#219ce4]' : 'text-[#1b1b1b]'}`}
             onClick={() => handleOnClick()}
         >
             <img src={`/assets/icons/${icon}.svg`} alt={icon} width={14} height={14} />
             <span className={`${isActive ? 'text-[#219ce4] bg-[#ddeffa]' : 'text-[#1b1b1b]'} text-base font-semibold`}>{title}</span>
         </div>
-    )
+    );
 }
 
 export default function AdminSidebar() {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    navigate('/login'); // Chuyển hướng về trang đăng nhập
-  };
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login'); // Chuyển hướng về trang đăng nhập
+    };
 
     return (
         <div className={`w-[18%] h-full min-h-screen flex flex-col items-center py-4 bg-[#fafafa] border-r-[1px] border-[#d9d9d9]`}>
@@ -58,5 +64,5 @@ export default function AdminSidebar() {
                 <SidebarItem title='Đăng xuất' icon='globe' isActive={false} onClick={handleLogout} />
             </div>
         </div>
-    )
+    );
 }

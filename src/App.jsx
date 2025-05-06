@@ -1,7 +1,7 @@
 import UserList from './components/UserList';
 import Login from './components/Login';
 import Home from './components/home';
-import Header from './components/ui/shared/header';  
+import Header from './components/ui/shared/header';
 import TicketDetails from './components/ticket-details';
 import Booking from './components/Booking';
 import AddEvent from './components/AddEvent';
@@ -19,6 +19,7 @@ import Discount from './components/my-events/discount';
 import TicketsList from './components/TicketsList';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from 'react-toastify';
+import ManagerBooking from './components/admin/manage-booking';
 
 const App = () => {
   return (
@@ -52,6 +53,7 @@ const App = () => {
             <Route path='/admin' element={<Admin />} />
             <Route path='/admin/manage-events' element={<ManageEvents />} />
             <Route path='/admin/manage-users' element={<ManageUsers />} />
+            <Route path='/admin/manage-booking' element={<ManagerBooking />} />
             <Route path='/my-events' element={<MyEvents />} />
             <Route path='/my-events/manage' element={<Manage />} />
             <Route path='/my-events/staff' element={<Staff />} />

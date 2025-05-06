@@ -87,39 +87,39 @@ export default function Section({ title, categoryItems, maxCards }) {
 
     const onApprove = async (eventId) => {
         try {
-            const session = await getUser()
-          const updatedEvent = await updateEvents(eventId, 'APPROVED', session.user.id);
-          // Bạn có thể cập nhật lại sự kiện trong state sau khi cập nhật thành công
-          setEvents((prevEvents) =>
-            prevEvents.map((event) =>
-              event.id === eventId ? { ...event, status: 'approved' } : event
-            )
-          );
-          console.log('Sự kiện đã được phê duyệt:', updatedEvent);
+            const session = await getUser();
+            const updatedEvent = await updateEvents(eventId, 'APPROVED', session.user.id);
+            // Bạn có thể cập nhật lại sự kiện trong state sau khi cập nhật thành công
+            setEvents((prevEvents) =>
+                prevEvents.map((event) =>
+                    event.id === eventId ? { ...event, status: 'approved' } : event
+                )
+            );
+            console.log('Sự kiện đã được phê duyệt:', updatedEvent);
         } catch (err) {
-          console.error('Lỗi khi phê duyệt sự kiện:', err);
+            console.error('Lỗi khi phê duyệt sự kiện:', err);
         }
-      };
+    };
 
-      const onReject = async (eventId) => {
+    const onReject = async (eventId) => {
         try {
-            const session = await getUser()
-          const updatedEvent = await updateEvents(eventId, 'CANCEL', session.user.id);
-          // Bạn có thể cập nhật lại sự kiện trong state sau khi cập nhật thành công
-          setEvents((prevEvents) =>
-            prevEvents.map((event) =>
-              event.id === eventId ? { ...event, status: 'cancel' } : event
-            )
-          );
-          console.log('Sự kiện đã được phê duyệt:', updatedEvent);
+            const session = await getUser();
+            const updatedEvent = await updateEvents(eventId, 'CANCEL', session.user.id);
+            // Bạn có thể cập nhật lại sự kiện trong state sau khi cập nhật thành công
+            setEvents((prevEvents) =>
+                prevEvents.map((event) =>
+                    event.id === eventId ? { ...event, status: 'cancel' } : event
+                )
+            );
+            console.log('Sự kiện đã được phê duyệt:', updatedEvent);
         } catch (err) {
-          console.error('Lỗi khi phê duyệt sự kiện:', err);
+            console.error('Lỗi khi phê duyệt sự kiện:', err);
         }
-      };
+    };
 
     return (
         <div className='max-w-screen'>
-            <div className="flex flex-col items-center gap-12 py-16 relative mx-auto w-full max-w-7xl px-4 lg:px-8">
+            <div className="flex flex-col items-center gap-2 py-16 relative mx-auto w-full max-w-7xl px-4 lg:px-8">
                 <div className="flex flex-col items-start gap-2 w-full overflow-hidden">
                     <p className="text-5xl leading-[64px] text-[#1b1b1b] font-extrabold">{title}</p>
                     <div className="flex flex-row items-center gap-2 text-gray-600">
