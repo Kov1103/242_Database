@@ -10,11 +10,15 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 export const Logout = () => {
   const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/login'); // Redirect to login page after logging out
+  // const handleLogout = async () => {
+  //   await supabase.auth.signOut();
+  //   navigate('/login'); // Redirect to login page after logging out
+  // };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login'); // Chuyển hướng về trang đăng nhập
   };
-
   // return (
   //   <div>
   //     <button onClick={handleLogout}>Logout</button>

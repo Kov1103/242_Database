@@ -26,6 +26,7 @@ function SidebarItem({ title, link, icon, isActive, onClick }) {
         if (onClick) {
             onClick()
         }
+        if(link)
         navigate(`${link}`)
     }
     return (
@@ -41,10 +42,11 @@ function SidebarItem({ title, link, icon, isActive, onClick }) {
 
 export default function AdminSidebar() {
     const navigate = useNavigate()
-    const handleLogout = async () => {
-        await supabase.auth.signOut();
-        navigate('/');
-    };
+    const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login'); // Chuyển hướng về trang đăng nhập
+  };
 
     return (
         <div className={`w-[18%] h-full min-h-screen flex flex-col items-center py-4 bg-[#fafafa] border-r-[1px] border-[#d9d9d9]`}>
