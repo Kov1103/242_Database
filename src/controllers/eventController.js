@@ -1,5 +1,5 @@
 // src/controllers/eventController.js
-import { createEvent, getAllEvents, getEventById, uploadImage } from "../models/Event";
+import { createEvent, getAllEvents, getEventById, updateStatus, uploadImage } from "../models/Event";
 
 // export const fetchAllEvents = async () => {
 //     return await getAllEvents()
@@ -9,6 +9,10 @@ export const fetchAllEvents = async (params = {}) => {
         Object.entries(params).filter(([_, v]) => v !== '' && v !== null && v !== undefined)
       );
     return await getAllEvents(cleanedFilters);
+  };
+
+  export const updateEvents = async (eventId, status, approverId) => {
+    return await updateStatus(eventId, status, approverId);
   };
 
 export const fetchEventById = async (id) => {

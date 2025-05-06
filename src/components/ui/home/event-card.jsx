@@ -1,6 +1,25 @@
 import Button from "../shared/button";
 
-export default function EventCard({ event, onClick }) {
+export default function EventCard({ event, onApprove, onReject, onClick }) {
+    const StatusBadge = ({ status }) => {
+        return (
+            <div
+                className={`px-4 py-1 rounded-2xl text-xs font-semibold ${status === 'pending'
+                    ? 'bg-[#f2e5cf] border-2 border-[#f2ae39] text-[#f2ae39]'
+                    : status === 'approved'
+                        ? 'bg-[#cef6d0] border-2 border-[#56d45c] text-[#56d45c]'
+                        : 'bg-[#fbcccc] border-2 border-[#f87474] text-[#f87474]'
+                    }`}
+            >
+                {status === 'pending'
+                    ? 'Đang chờ'
+                    : status === 'approved'
+                        ? 'Đã duyệt'
+                        : 'Đã từ chối'}
+            </div>
+        )
+    }
+
     const getSmallestPrice = (shows) => {
         let smallestPrice = Infinity;
         shows.forEach(show => {
@@ -35,6 +54,7 @@ export default function EventCard({ event, onClick }) {
             </div>
             <div className="absolute w-full bottom-0 p-5 flex flex-col gap-10">
                 <div className="flex flex-col items-start gap-2 text-[#1b1b1b]">
+                <StatusBadge status={event.status} />
                     <p className="text-lg font-bold text-left">{event.title}</p>
                     <div className="flex flex-col items-start gap-1 text-base font-normal">
                         <div className="flex flex-row items-center gap-3">
@@ -57,7 +77,33 @@ export default function EventCard({ event, onClick }) {
                         </div>
                     </div>
                 </div>
-                <Button bgColor={'#1b1b1b'} textColor={'#fafafa'} title={'Mua vé'} onClick={onClick} />
+                {/* <Button bgColor={'#1b1b1b'} textColor={'#fafafa'} title={'Mua vé'} onClick={onClick} /> */}
+                {/* Điều kiện hiển thị nút theo trạng thái */}
+                {event.status.toLowerCase() === 'pending' ? (
+                    <div className="flex gap-4 w-full">
+                        <Button
+                            bgColor={'#1b1b1b'}
+                            textColor={'#fafafa'}
+                            title={'Duyệt'}
+                            onClick={onApprove}
+                            className="flex-1"
+                        />
+                        <Button
+                            bgColor={'#e57373'}
+                            textColor={'#fafafa'}
+                            title={'Từ chối'}
+                            onClick={onReject}
+                            className="flex-1"
+                        />
+                    </div>
+                ) : (
+                    <Button
+                        bgColor={'#1b1b1b'}
+                        textColor={'#fafafa'}
+                        title={'Xem thông tin'}
+                        onClick={onClick}
+                    />
+                )}
             </div>
         </div>
     )

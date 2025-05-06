@@ -1,6 +1,6 @@
 // src/models/Event.js
 import { createClient } from "@supabase/supabase-js";
-import { getData } from "../services/api";
+import { getData, postData } from "../services/api";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -16,6 +16,15 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const getAllEvents = async (params = {}) => {
     return getData('/events', params); // Gọi API lấy tất cả sự kiện
+  };
+
+  export const updateStatus = async (eventId, status, approverId) => {
+    const response = await postData('/events/update', {
+      event_id: eventId,
+      status: status,
+      approver_id: approverId,
+    });
+    return response
   };
 
 export const getEventById = async (id) => {

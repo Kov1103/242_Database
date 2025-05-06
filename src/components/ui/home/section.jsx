@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import EventCard from './event-card';
 import { useNavigate } from 'react-router-dom';
 import { createClient } from '@supabase/supabase-js';
-import { fetchAllEvents } from '../../../controllers/eventController';
+import { fetchAllEvents, updateEvents } from '../../../controllers/eventController';
+import { getUser } from '../../../controllers/authController';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -83,6 +84,38 @@ export default function Section({ title, categoryItems, maxCards }) {
 
     const eventsToDisplay = events.slice(0, maxCards);
     const chunkedEvents = chunkArray(eventsToDisplay, 3);
+
+    const onApprove = async (eventId) => {
+        try {
+            const session = await getUser()
+          const updatedEvent = await updateEvents(eventId, 'APPROVED', session.user.id);
+          // Bạn có thể cập nhật lại sự kiện trong state sau khi cập nhật thành công
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.id === eventId ? { ...event, status: 'approved' } : event
+            )
+          );
+          console.log('Sự kiện đã được phê duyệt:', updatedEvent);
+        } catch (err) {
+          console.error('Lỗi khi phê duyệt sự kiện:', err);
+        }
+      };
+
+      const onReject = async (eventId) => {
+        try {
+            const session = await getUser()
+          const updatedEvent = await updateEvents(eventId, 'CANCEL', session.user.id);
+          // Bạn có thể cập nhật lại sự kiện trong state sau khi cập nhật thành công
+          setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.id === eventId ? { ...event, status: 'cancel' } : event
+            )
+          );
+          console.log('Sự kiện đã được phê duyệt:', updatedEvent);
+        } catch (err) {
+          console.error('Lỗi khi phê duyệt sự kiện:', err);
+        }
+      };
 
     return (
         <div className='max-w-screen'>
@@ -169,9 +202,11 @@ export default function Section({ title, categoryItems, maxCards }) {
                                     <EventCard
                                         event={item}
                                         onClick={() => {
-                                            window.scrollTo(0, 0);
-                                            navigate(`/ticket-details/${item.id}`);
+                                            // window.scrollTo(0, 0);
+                                            // navigate(`/ticket-details/${item.id}`);
                                         }}
+                                        onApprove={() => onApprove(item.id)}
+                                        onReject={() => onReject(item.id)}
                                     />
                                 </div>
                             ))

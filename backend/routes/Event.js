@@ -39,10 +39,37 @@ router.get('/', async (req, res) => {
       first_session_time: event.first_session_time,
       last_session_time: event.last_session_time,
       category: event.categories, // bạn có thể split(',') nếu muốn dạng mảng
+      status: event.status.toLowerCase(),
       // Optional: thêm các trường khác theo format Supabase nếu có
     }));
 
     res.json(events);
+  });
+});
+
+router.post('/update', async (req, res) => {
+  const { event_id, status, approver_id } = req.body;
+
+  if (!event_id || !status || !approver_id) {
+    return res.status(400).json({ error: 'Missing required parameters' });
+  }
+
+  const query = "CALL update_event_status(?, ?, ?)";
+  const params = [event_id, status, approver_id];
+
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error("❌ Error calling stored procedure:", err.message);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    // Kiểm tra kết quả trả về từ stored procedure nếu cần
+    const response = results[0];
+
+    res.json({
+      message: 'Event status updated successfully',
+      result: response
+    });
   });
 });
 
