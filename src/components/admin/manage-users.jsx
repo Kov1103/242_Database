@@ -188,7 +188,7 @@ const openEditModal = (user) => {
             <div className="flex flex-col items-start gap-1">
                 <p className="font-bold text-lg">{user.lname} {user.fname}</p>
                 <p className="font-normal text-base">Email: {user.email}</p>
-                <p className="font-normal text-base">Lần cuối hoạt động: </p>
+                {/* <p className="font-normal text-base">Lần cuối hoạt động: </p> */}
             </div>
             <div className="flex flex-col items-end gap-4">
                 <UserBadge role={user.role} />

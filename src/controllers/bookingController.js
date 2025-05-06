@@ -1,5 +1,6 @@
 import { getAllBooking } from '../models/Booking';
 
 export const fetchAllBooking = async () => {
-    return await getAllBooking();
+    const data = await getAllBooking();
+    return data.bookings
 };
