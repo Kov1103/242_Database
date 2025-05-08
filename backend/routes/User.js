@@ -130,4 +130,32 @@ router.post('/create', async (req, res) => {
 });
 
 
+router.delete('/delete/:user_id', async (req, res) => {
+  const { user_id } = req.params;
+
+  // Kiểm tra đầu vào
+  if (!user_id) {
+    return res.status(400).json({ message: 'Thiếu user_id để xóa' });
+  }
+
+  try {
+    const query = `CALL procedure_delete_user(?)`;
+    const params = [user_id];
+
+    db.query(query, params, (err, result) => {
+      if (err) {
+        console.error('Lỗi khi gọi procedure:', err.message);
+        return res.status(500).json({ message: err.message });
+      }
+
+      // Kết quả SELECT trong procedure nằm ở result[0]
+      const message = result[0]?.[0]?.message || 'Xử lý thành công';
+      res.json({ message });
+    });
+  } catch (error) {
+    console.error('Lỗi khi xử lý yêu cầu xoá:', error.message);
+    res.status(500).json({ message: 'Lỗi server khi xử lý yêu cầu xoá' });
+  }
+});
+
 export default router;
