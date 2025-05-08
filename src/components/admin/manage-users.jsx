@@ -37,12 +37,13 @@ const openEditModal = (user) => {
   const handleSave = async () => {
     try {
       await changeInfo(editingUser, formData.phone_no, formData.address, formData.email);
-      const updated = users.map(u =>
-        u.id === editingUser.id
-          ? { ...u, email: formData.email, phone_no: formData.phone_no, address: formData.address }
-          : u
-      );
-      setUsers(updated);
+    //   const updated = users.map(u =>
+    //     u.id === editingUser.id
+    //       ? { ...u, email: formData.email, phone_no: formData.phone_no, address: formData.address }
+    //       : u
+    //   );
+    //   setUsers(updated);
+    await fetchUsers();
     //   handleUserStatus(activeRole);
       setEditingUser(null);
     } catch (err) {
@@ -89,7 +90,7 @@ const openEditModal = (user) => {
   
       await addUser(userData);
       alert("Người dùng đã được tạo thành công!");
-  
+      await fetchUsers();
       // Đóng modal và reset form
       setShowAddModal(false);
       setNewUserData({
@@ -225,7 +226,7 @@ const openEditModal = (user) => {
             <div className="fixed text-black inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
                 <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg">
                 <h2 className="text-xl font-bold mb-4">Chỉnh sửa người dùng</h2>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 text-left">
                     <label>Email:</label>
                     <input
                     type="email"
@@ -275,7 +276,7 @@ const openEditModal = (user) => {
                     { label: "Địa chỉ", key: "address" }
                     ].map(({ label, key, type = "text" }) => (
                     <div key={key}>
-                        <label className="block font-medium">{label}:</label>
+                        <label className="block text-left font-medium">{label}:</label>
                         {type === "select" ? (
                         <select
                             value={newUserData[key]}
