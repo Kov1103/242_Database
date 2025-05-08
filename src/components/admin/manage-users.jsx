@@ -1,7 +1,7 @@
 import AdminSidebar from "../ui/admin/sidebar"
 import { useEffect, useState } from "react"
 import { createClient } from '@supabase/supabase-js';
-import { changeInfo, fetchAllUsers } from "../../controllers/userController";
+import { addUser, changeInfo, fetchAllUsers } from "../../controllers/userController";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -19,9 +19,9 @@ function RoleButton({ role, onClick, isActive }) {
 }
 
 export default function ManageUsers() {
-    const [activeRole, setActiveRole] = useState('Tất cả');
+    // const [activeRole, setActiveRole] = useState('Tất cả');
     const [users, setUsers] = useState([]);
-    const [fileredUsers, setFilteredUsers] = useState([]);
+    // const [fileredUsers, setFilteredUsers] = useState([]);
 
     const [editingUser, setEditingUser] = useState(null);
 const [formData, setFormData] = useState({ email: '', phone_no: '', address: '' });
@@ -43,7 +43,7 @@ const openEditModal = (user) => {
           : u
       );
       setUsers(updated);
-      handleUserStatus(activeRole);
+    //   handleUserStatus(activeRole);
       setEditingUser(null);
     } catch (err) {
       console.error("Lỗi cập nhật:", err.message);
@@ -65,33 +65,47 @@ const openEditModal = (user) => {
 
   const handleAddUser = async () => {
     try {
-    //   const { ssn, email, password, fname, lname, gender, dob, phone_no, address } = newUserData;
+      // Lấy dữ liệu từ form
+      const { ssn, email, password, fname, lname, gender, dob, phone_no, address } = newUserData;
   
-    //   const { data, error } = await supabase.rpc('add_user', {
-    //     in_ssn: ssn,
-    //     in_email: email,
-    //     in_password: password,
-    //     in_fname: fname,
-    //     in_lname: lname,
-    //     in_gender: gender,
-    //     in_dob: dob,
-    //     in_phone_no: phone_no,
-    //     in_address: address
-    //   });
+      // Kiểm tra các trường có đầy đủ dữ liệu
+      if (!ssn || !email || !password || !fname || !lname || !gender || !dob || !phone_no || !address) {
+        alert("Vui lòng điền đầy đủ thông tin.");
+        return;
+      }
   
-    //   if (error) throw error;
+      // Tạo dữ liệu người dùng
+      const userData = {
+        ssn,
+        email,
+        password,
+        fname,
+        lname,
+        gender,
+        dob,
+        phone_no,
+        address,
+      };
   
-    //   // Optionally re-fetch or add to list manually
-    //   const updated = await fetchAllUsers();
-    //   setUsers(updated);
-    //   handleUserStatus(activeRole);
-    //   setShowAddModal(false);
-    //   setNewUserData({
-    //     ssn: '', email: '', password: '', fname: '', lname: '',
-    //     gender: 'M', dob: '', phone_no: '', address: ''
-    //   });
+      await addUser(userData);
+      alert("Người dùng đã được tạo thành công!");
+  
+      // Đóng modal và reset form
+      setShowAddModal(false);
+      setNewUserData({
+        ssn: '',
+        email: '',
+        password: '',
+        fname: '',
+        lname: '',
+        gender: 'M',
+        dob: '',
+        phone_no: '',
+        address: '',
+      });
     } catch (err) {
-      console.error("Lỗi thêm người dùng:", err.message);
+      console.error("Lỗi tạo người dùng:", err.message);
+      alert("Đã xảy ra lỗi. Vui lòng thử lại sau.");
     }
   };
 // useEffect(() => {
@@ -107,40 +121,38 @@ const openEditModal = (user) => {
     //     };
     //     fetchUsers();
     // }, [users.map(user => user.role).join(',')])
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const data = await fetchAllUsers(); // Truyền filters
-                console.log(data);
-                setUsers(data);
-                setFilteredUsers(data);
-            } catch (err) {
-                console.error("Lỗi lấy người dùng:", err.message);
-            }
-        };
-        fetchUsers();
-    }, [users.map(user => user.role).join(',')])
-
-    const handleUserStatus = (role) => {
-        setActiveRole(role)
-        let filtered;
-        switch (role) {
-            case 'Tất cả':
-                filtered = users;
-                break;
-            case 'Quản trị viên':
-                filtered = users.filter(user => user.role === 'admin');
-                break;
-            case 'Khách hàng':
-                filtered = users.filter(user => user.role === 'customer');
-                break;
-            default:
-                filtered = users;
-                break;
+    const fetchUsers = async () => {
+        try {
+            const data = await fetchAllUsers(); // Truyền filters
+            console.log(data);
+            setUsers(data);
+        } catch (err) {
+            console.error("Lỗi lấy người dùng:", err.message);
         }
-        setFilteredUsers(filtered);
-    }
+    };
+    useEffect(() => {
+        fetchUsers();
+    }, [])
+
+    // const handleUserStatus = (role) => {
+    //     setActiveRole(role)
+    //     let filtered;
+    //     switch (role) {
+    //         case 'Tất cả':
+    //             filtered = users;
+    //             break;
+    //         case 'Quản trị viên':
+    //             filtered = users.filter(user => user.role === 'admin');
+    //             break;
+    //         case 'Khách hàng':
+    //             filtered = users.filter(user => user.role === 'customer');
+    //             break;
+    //         default:
+    //             filtered = users;
+    //             break;
+    //     }
+    //     setFilteredUsers(filtered);
+    // }
 
     function UserItem({ user }) {
         const UserBadge = ({ role }) => {
@@ -168,7 +180,7 @@ const openEditModal = (user) => {
             console.log(data);
             const updatedUsers = users.map(user => user.id === user_id ? { ...user, role: role } : user);
             setUsers(updatedUsers);
-            handleUserStatus(activeRole);
+            // handleUserStatus(activeRole);
         }
 
         const handleRemoveUser = async (user_id) => {
@@ -180,7 +192,7 @@ const openEditModal = (user) => {
             console.log(data);
             const updatedUsers = users.filter(user => user.id !== user_id);
             setUsers(updatedUsers);
-            handleUserStatus(activeRole);
+            // handleUserStatus(activeRole);
         }
     
         return (
@@ -330,7 +342,7 @@ const openEditModal = (user) => {
                     ))}
                 </div> */}
                 <div className="my-2 flex flex-col items-start gap-2 w-full h-[calc(100vh-240px)] overflow-y-auto scrollbar-hide">
-                    {fileredUsers?.map((user, index) => (
+                    {users?.map((user, index) => (
                         <UserItem key={index} user={user} />
                     ))}
                 </div>

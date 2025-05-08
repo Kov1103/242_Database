@@ -178,27 +178,27 @@ app.use('/booking', bookingRoutes);
 //   );
 // });
 
-// Gọi stored procedure
-const callGetFilteredEvents = async () => {
-  const query = "CALL get_filtered_events(?, ?, ?, ?, ?, ?)";
-  const params = [
-    null,                 // keyword
-    null,                 // category_id
-    null,         // start_time
-    null,         // end_time
-    null,                 // min_price
-    null                  // max_price
-  ];
+// // Gọi stored procedure
+// const callGetFilteredEvents = async () => {
+//   const query = "CALL get_filtered_events(?, ?, ?, ?, ?, ?)";
+//   const params = [
+//     null,                 // keyword
+//     null,                 // category_id
+//     null,         // start_time
+//     null,         // end_time
+//     null,                 // min_price
+//     null                  // max_price
+//   ];
 
-  db.query(query, params, (err, results) => {
-    if (err) {
-      console.error("❌ Lỗi khi gọi stored procedure:", err.message);
-      return;
-    }
-    console.log("📋 Kết quả:", results[0]); // results[0] là dữ liệu trả về
-  });
-};
+//   db.query(query, params, (err, results) => {
+//     if (err) {
+//       console.error("❌ Lỗi khi gọi stored procedure:", err.message);
+//       return;
+//     }
+//     console.log("📋 Kết quả:", results[0]); // results[0] là dữ liệu trả về
+//   });
+// };
 
-callGetFilteredEvents();
+// callGetFilteredEvents();
 
 app.listen(port, () => console.log(`🚀 Server chạy tại http://localhost:${port}`));

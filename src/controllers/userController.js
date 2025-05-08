@@ -1,5 +1,6 @@
 // src/controllers/userController.js
-import { getAllUsers, createUser, getUser, getSession, updateUser } from "../models/User";
+import { getAllUsers, createUser, getUser, updateUser } from "../models/User";
+import { getSession } from "../models/Auth";
 
 export const fetchAllUsers = async () => {
   const data = await getAllUsers();
@@ -10,18 +11,12 @@ export const changeInfo = async (user, phone_no, address, email) => {
     return await updateUser(user, phone_no, address, email);
   };
 
-export const addUser = async (user) => {
-  return await createUser(user);
-};
+// export const addUser = async (user) => {
+//   return await createUser(user);
+// };
 
 export const fetchUser = async () => {
-  try {
-    const { data: { session }, error } = await getSession();
-
-    if (error) {
-      console.error("Error fetching session:", error);
-      return { userData: null, sessionStatus: null };
-    }
+    const session = await getSession();
 
     const userEmail = session?.user?.email;
     if (!userEmail) {
@@ -37,12 +32,11 @@ export const fetchUser = async () => {
     }
 
     return { userData: user, sessionStatus: session };
-  } catch (error) {
-    console.error("Error in fetchUser:", error);
-    return { userData: null, sessionStatus: null };
-  }
 }
 
+export const addUser = async (user) => {
+  await createUser(user);
+}
 // export const changeInfo = async (user) => {
 //   return await updateUser(user)
 // }
